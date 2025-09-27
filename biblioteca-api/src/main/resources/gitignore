@@ -1,0 +1,12 @@
+/target/
+/out/
+/bin/
+/*.iml
+/.idea/
+/.vscode/
+/*.log
+*.class
+*.jar
+*.war
+*.db
+application.properties
