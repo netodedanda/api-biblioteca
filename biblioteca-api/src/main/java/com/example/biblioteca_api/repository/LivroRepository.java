@@ -5,5 +5,5 @@ import com.example.biblioteca_api.model.Livro;
 import java.util.List;
 
 public interface LivroRepository extends JpaRepository<Livro, Long> {
-    List<Livro> findByTituloContainingIgnoreCase(String titulo);
+    List<Livro> findByAutorId(Long autorId);
 }
