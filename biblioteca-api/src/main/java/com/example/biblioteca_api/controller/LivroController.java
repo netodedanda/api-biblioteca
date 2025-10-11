@@ -4,39 +4,50 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import com.example.biblioteca_api.model.Livro;
 import com.example.biblioteca_api.repository.LivroRepository;
+import com.example.biblioteca_api.repository.AutorRepository;
 
 @RestController
 @RequestMapping("/livros")
 public class LivroController {
-    private final LivroRepository repository;
+    private final LivroRepository livroRepository;
+    private final AutorRepository autorRepository;
 
-    public LivroController(LivroRepository repository) {
-        this.repository = repository;
+    public LivroController(LivroRepository livroRepository, AutorRepository autorRepository) {
+        this.livroRepository = livroRepository;
+        this.autorRepository = autorRepository;
     }
 
     @GetMapping
     public List<Livro> listar() {
-        return repository.findAll();
+        return livroRepository.findAll();
     }
 
-    @GetMapping("/buscar")
-    public List<Livro> buscarPorTitulo(@RequestParam String titulo) {
-        return repository.findByTituloContainingIgnoreCase(titulo);
+    @GetMapping("/autor/{autorId}")
+    public List<Livro> listarPorAutor(@PathVariable Long autorId) {
+        return livroRepository.findByAutorId(autorId);
     }
 
     @PostMapping
     public Livro criar(@RequestBody Livro livro) {
-        return repository.save(livro);
+        if (livro.getAutor() != null && livro.getAutor().getId() != null) {
+            autorRepository.findById(livro.getAutor().getId())
+                    .ifPresent(livro::setAutor);
+        }
+        return livroRepository.save(livro);
     }
 
     @PutMapping("/{id}")
     public Livro atualizar(@PathVariable Long id, @RequestBody Livro livro) {
         livro.setId(id);
-        return repository.save(livro);
+        if (livro.getAutor() != null && livro.getAutor().getId() != null) {
+            autorRepository.findById(livro.getAutor().getId())
+                    .ifPresent(livro::setAutor);
+        }
+        return livroRepository.save(livro);
     }
 
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable Long id) {
-        repository.deleteById(id);
+        livroRepository.deleteById(id);
     }
 }

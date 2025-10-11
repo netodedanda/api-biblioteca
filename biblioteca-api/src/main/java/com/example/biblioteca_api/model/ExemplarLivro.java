@@ -14,7 +14,9 @@ public class ExemplarLivro {
     @JoinColumn(name = "livro_id")
     private Livro livro;
 
-
+    // -----------------------------
+    // Getters e Setters padrão
+    // -----------------------------
     public Long getId() {
         return id;
     }
@@ -37,5 +39,16 @@ public class ExemplarLivro {
 
     public void setLivro(Livro livro) {
         this.livro = livro;
+    }
+
+    // -----------------------------
+    // Métodos para disponibilidade
+    // -----------------------------
+    public boolean isDisponivel() {
+        return "disponivel".equalsIgnoreCase(this.status);
+    }
+
+    public void setDisponivel(boolean disponivel) {
+        this.status = disponivel ? "disponivel" : "emprestado";
     }
 }
